@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Product Name Standardizer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <img src="{{ url_for('static', filename='instacart_logo.png') }}" alt="Instacart Logo" class="header-logo">
+        <h1 class="text-center">CSV Product Name Standardizer</h1>
+        <p class="text-center">Upload your CSV files and configure the settings to standardize product names efficiently.</p>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="raw_file">Upload Raw CSV File</label>
+                <input type="file" class="form-control" id="raw_file" name="raw_file" required>
+            </div>
+            <div class="form-group">
+                <label for="abbreviation_file">Upload Abbreviation List CSV File</label>
+                <input type="file" class="form-control" id="abbreviation_file" name="abbreviation_file" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        {% if columns %}
+        <hr>
+        <form method="post" action="/process">
+            <input type="hidden" name="raw_df" value="{{ raw_df }}">
+            <input type="hidden" name="abbreviation_mapping" value="{{ abbreviation_mapping }}">
+            <div class="form-group">
+                <label for="raw_brand_name_col">Select Column for Raw Brand Names</label>
+                <select class="form-control" id="raw_brand_name_col" name="raw_brand_name_col" required>
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="storefront_brand_col">Select Column for Storefront Brands</label>
+                <select class="form-control" id="storefront_brand_col" name="storefront_brand_col" required>
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="raw_name_col">Select Column for Raw Names</label>
+                <select class="form-control" id="raw_name_col" name="raw_name_col" required>
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="storefront_name_col">Select Column for Storefront Names</label>
+                <select class="form-control" id="storefront_name_col" name="storefront_name_col" required>
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="additional_col1">Select Additional Column (Optional)</label>
+                <select class="form-control" id="additional_col1" name="additional_col1">
+                    <option value="">None</option>
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="additional_col2">Select Additional Column (Optional)</label>
+                <select class="form-control" id="additional_col2" name="additional_col2">
+                    <option value="">None</option>
+                    {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="tversky_alpha">Tversky Alpha (default 0.7)</label>
+                <small class="form-text text-muted">Controls the importance of the set differences from the first string. Higher alpha gives more weight to differences in the first string.</small>
+                <input type="number" class="form-control" id="tversky_alpha" name="tversky_alpha" step="0.01" value="0.7" required>
+            </div>
+            <div class="form-group">
+                <label for="tversky_beta">Tversky Beta (default 0.3)</label>
+                <small class="form-text text-muted">Controls the importance of the set differences from the second string. Higher beta gives more weight to differences in the second string.</small>
+                <input type="number" class="form-control" id="tversky_beta" name="tversky_beta" step="0.01" value="0.3" required>
+            </div>
+            <div class="form-group">
+                <label for="jaro_count">Jaro-Winkler Character Count (default 4)</label>
+                <small class="form-text text-muted">Determines how many characters from the start of the strings are compared. Higher count means more characters are considered.</small>
+                <input type="number" class="form-control" id="jaro_count" name="jaro_count" value="4" required>
+            </div>
+            <button type="submit" class="btn btn-success">Process</button>
+        </form>
+        {% endif %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
