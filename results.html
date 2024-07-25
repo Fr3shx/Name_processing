@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+        .card-header {
+            background-color: #006400;
+            color: white;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .card-body {
+            background-color: white;
+        }
+        .btn-primary {
+            background-color: #006400;
+            border-color: #006400;
+        }
+        .btn-primary:hover {
+            background-color: #004b23;
+            border-color: #004b23;
+        }
+        .header-logo {
+            width: 150px;
+            margin: 20px auto;
+            display: block;
+        }
+        .stat-item {
+            margin-bottom: 15px;
+        }
+        .stat-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .classification-counts {
+            padding-left: 0;
+            list-style: none;
+        }
+        .classification-counts li {
+            margin-bottom: 10px;
+        }
+        .icon-above-50 {
+            color: #28a745;
+        }
+        .icon-below-50 {
+            color: #dc3545;
+        }
+        .icon-classification-1 {
+            color: #ff8100;
+        }
+        .icon-classification-2 {
+            color: #17a2b8;
+        }
+        .icon-classification-3 {
+            color: #ffc107;
+        }
+        .icon-classification-4 {
+            color: #6f42c1;
+        }
+        .icon-classification-5 {
+            color: #fd7e14;
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='instacart_logo.png') }}" alt="Instacart Logo" class="header-logo">
+        <div class="card">
+            <div class="card-header text-center">
+                <h2>Processing Results</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle stat-icon icon-above-50"></i>
+                            <strong>Brand Names with Similarity > 0.50:</strong> {{ stats.brand_above_50 }}%
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-times-circle stat-icon icon-below-50"></i>
+                            <strong>Brand Names with Similarity <= 0.50:</strong> {{ stats.brand_below_50 }}%
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle stat-icon icon-above-50"></i>
+                            <strong>Names with Similarity > 0.50:</strong> {{ stats.name_above_50 }}%
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-times-circle stat-icon icon-below-50"></i>
+                            <strong>Names with Similarity <= 0.50:</strong> {{ stats.name_below_50 }}%
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-exclamation-circle stat-icon icon-classification-1"></i>
+                            <strong>Percentage of Brand Needs Review:</strong> {{ stats.needs_review_brand_percentage }}%
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-exclamation-circle stat-icon icon-classification-2"></i>
+                            <strong>Percentage of Name Needs Review:</strong> {{ stats.needs_review_name_percentage }}%
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Classification Counts (in %)</h4>
+                        {% if stats.classification_counts %}
+                        <ul class="classification-counts">
+                            {% for classification, count in stats.classification_counts.items() %}
+                            <li>
+                                <i class="fas 
+                                    {% if loop.index == 1 %}fa-apple-alt icon-classification-1
+                                    {% elif loop.index == 2 %}fa-lemon icon-classification-2
+                                    {% elif loop.index == 3 %}fa-pepper-hot icon-classification-3
+                                    {% elif loop.index == 4 %}fa-seedling icon-classification-4
+                                    {% else %}fa-carrot icon-classification-5{% endif %} stat-icon">
+                                </i> 
+                                {{ classification }}: {{ count }}%
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>No classification data available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <h3>Download</h3>
+                    <a href="{{ download_link }}" class="btn btn-primary btn-lg" id="download-button"><i class="fas fa-download"></i> Download Processed File</a>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-secondary btn-lg"><i class="fas fa-redo-alt"></i> Start a New Process</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const icons = document.querySelectorAll('.stat-icon');
+            icons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    icon.classList.add('shake');
+                    setTimeout(() => {
+                        icon.classList.remove('shake');
+                    }, 500);
+                });
+            });
+
+            document.getElementById('download-button').addEventListener('click', function(event) {
+                event.preventDefault();
+                const downloadLink = this.href;
+                setTimeout(function() {
+                    window.location.href = '/reset';
+                }, 1000);
+                window.location.href = downloadLink;
+            });
+        });
+    </script>
+</body>
+</html>
