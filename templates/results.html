@@ -9,6 +9,7 @@
     <style>
         body {
             background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
         }
         .container {
             margin-top: 50px;
@@ -16,23 +17,41 @@
         .card {
             margin-top: 20px;
             border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .card-header {
             background-color: #006400;
             color: white;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
+            text-align: center;
+            padding: 20px;
         }
         .card-body {
             background-color: white;
+            padding: 30px;
         }
         .btn-primary {
             background-color: #006400;
             border-color: #006400;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
         }
         .btn-primary:hover {
             background-color: #004b23;
             border-color: #004b23;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
         }
         .header-logo {
             width: 150px;
@@ -40,7 +59,8 @@
             display: block;
         }
         .stat-item {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 18px;
         }
         .stat-icon {
             font-size: 24px;
@@ -52,6 +72,7 @@
         }
         .classification-counts li {
             margin-bottom: 10px;
+            font-size: 18px;
         }
         .icon-above-50 {
             color: #28a745;
@@ -84,13 +105,17 @@
         .shake {
             animation: shake 0.5s;
         }
+        h3, h4 {
+            margin-top: 30px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <img src="{{ url_for('static', filename='instacart_logo.png') }}" alt="Instacart Logo" class="header-logo">
         <div class="card">
-            <div class="card-header text-center">
+            <div class="card-header">
                 <h2>Processing Results</h2>
             </div>
             <div class="card-body">
@@ -148,7 +173,7 @@
                     <a href="{{ download_link }}" class="btn btn-primary btn-lg" id="download-button"><i class="fas fa-download"></i> Download Processed File</a>
                 </div>
                 <div class="text-center mt-4">
-                    <a href="/" class="btn btn-secondary btn-lg"><i class="fas fa-redo-alt"></i> Start a New Process</a>
+                    <a href="/reset" class="btn btn-secondary btn-lg"><i class="fas fa-redo-alt"></i> Restart</a>
                 </div>
             </div>
         </div>
@@ -172,7 +197,9 @@
                 event.preventDefault();
                 const downloadLink = this.href;
                 setTimeout(function() {
-                    window.location.href = '/reset';
+                    if (confirm('Do you want to start a new process?')) {
+                        window.location.href = '/reset';
+                    }
                 }, 1000);
                 window.location.href = downloadLink;
             });

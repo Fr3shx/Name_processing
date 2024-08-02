@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Query Progress</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .progress-container {
+            text-align: center;
+        }
+        .progress-bar {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <h1>Query is in Progress...</h1>
+        <div class="progress mt-3">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+        </div>
+    </div>
+    <script>
+        function checkProgress() {
+            fetch('/progress')
+                .then(response => response.text())
+                .then(data => {
+                    if (data === 'Query is still in progress...') {
+                        setTimeout(checkProgress, 1000);
+                    } else if (data === 'Query completed.') {
+                        window.location.href = '/select_columns';
+                    } else {
+                        console.error('Unexpected response:', data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        checkProgress();
+    </script>
+</body>
+</html>

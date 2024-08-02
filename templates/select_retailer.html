@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Retailer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .header-logo {
+            width: 150px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #006400;
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            text-align: center;
+            padding: 20px;
+        }
+        .card-body {
+            background-color: white;
+            padding: 30px;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+        .form-control {
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #006400;
+            border-color: #006400;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #004b23;
+            border-color: #004b23;
+            transform: translateY(-2px);
+        }
+        .btn-primary:active {
+            background-color: #003d1c;
+            border-color: #003d1c;
+            transform: translateY(0);
+        }
+        .card-footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+        .form-text {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='instacart_logo.png') }}" alt="Instacart Logo" class="header-logo">
+        <div class="card">
+            <div class="card-header">
+                <h2>Select Retailer</h2>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="retailer_id">Retailer ID:</label>
+                        <input type="text" class="form-control" id="retailer_id" name="retailer_id" placeholder="Enter Retailer ID" required>
+                        <small class="form-text text-muted">Please enter the unique Retailer ID to proceed.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+                </form>
+            </div>
+            <div class="card-footer">
+                <p class="form-text">Need help? Contact Robby for assistance.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
